@@ -1,1 +1,1 @@
-# passport-google-oauth-example
+# passport-oidc-example
