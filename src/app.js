@@ -6,7 +6,7 @@ import session from 'express-session';
 import path from 'path';
 import engine from 'ejs-locals';
 import passport from 'passport';
-import Oidc from 'passport-google-openidconnect';
+import Oidc from 'passport-openidconnect';
 const OidcStrategy = Oidc.Strategy;
 import routes from './routes';
 
@@ -24,6 +24,13 @@ passport.use(new OidcStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     scope: 'openid profile email',
+
+    authorizationURL : 'https://accounts.google.com/o/oauth2/v2/auth',
+    tokenURL : 'https://www.googleapis.com/oauth2/v4/token',
+    userInfoURL: 'https://www.googleapis.com/oauth2/v3/userinfo',
+    revocationURL: 'https://accounts.google.com/o/oauth2/revoke',
+    tokenInfoURL: 'https://www.googleapis.com/oauth2/v1/tokeninfo',
+    oidcIssuer: 'accounts.google.com'
   },
   function(iss, sub, profile, accessToken, refreshToken, done) {
     process.nextTick(function () {

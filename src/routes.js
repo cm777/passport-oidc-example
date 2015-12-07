@@ -17,13 +17,13 @@ export default (app, passport, controllers) => {
     res.render('login', { user: req.user });
   });
 
-  app.get('/auth/google-openidconnect',
-    passport.authenticate('google-openidconnect')
-    // passport.authenticate('google-openidconnect', { scope: ['email', 'profile', 'openid'] })
+  app.get('/auth/oidc',
+    passport.authenticate('openidconnect')
+    // passport.authenticate('openidconnect', { scope: ['email', 'profile', 'openid'] })
     );
 
   app.get('/cb',
-    passport.authenticate('google-openidconnect', { failureRedirect: '/login' }),
+    passport.authenticate('openidconnect', { failureRedirect: '/login' }),
     (req, res) => {
       res.redirect('/');
     });
