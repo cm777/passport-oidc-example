@@ -1,6 +1,5 @@
 <% layout('./layout') -%>
 
-<p>ID: <%= user.id %></p>
-<p>Name: <%= user.displayName %></p>
-<p>Email: <%= user.emails[0].value %></p>
-
+<p>ID: <%= user.profile.id %></p>
+<p>Name: <%= user.profile.displayName %></p>
+<p>Email: <%= user.profile._json.email %></p>

@@ -6,8 +6,8 @@ import session from 'express-session';
 import path from 'path';
 import engine from 'ejs-locals';
 import passport from 'passport';
-import Google from 'passport-google-oauth';
-const GoogleStrategy = Google.OAuth2Strategy;
+import Oidc from 'passport-google-openidconnect';
+const OidcStrategy = Oidc.Strategy;
 import routes from './routes';
 
 
@@ -19,17 +19,15 @@ passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
 
-// API Access link for creating client ID and secret:
-// https://console.developers.google.com/project
-passport.use(new GoogleStrategy({
+passport.use(new OidcStrategy({
+    callbackURL : 'http://localhost:3001/cb',
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: 'http://localhost:3000/auth/google/return'
+    scope: 'openid profile email',
   },
-  function(accessToken, refreshToken, profile, done) {
-    // asynchronous verification, for effect...
+  function(iss, sub, profile, accessToken, refreshToken, done) {
     process.nextTick(function () {
-      return done(null, profile);
+      return done(null, { profile: profile });
     });
   }
 ));
@@ -53,13 +51,11 @@ app.use(express.static(__dirname + '/../../public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const controllers = {
-    // google: new GoogleController(),
-};
+const controllers = {};
 
 routes(app, passport, controllers);
 
-const server = app.listen(3000, function () {
+const server = app.listen(3001, function () {
   let host = server.address().address;
   let port = server.address().port;
 
